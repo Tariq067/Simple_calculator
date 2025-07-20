@@ -1,31 +1,38 @@
-const form = document.getElementById('calculator');
-const resultDiv = document.getElementById('result');
+let displaybox = document.getElementById("display");
+let buttons = document.querySelectorAll('button');
+let str = '';
+let arr = Array.from(buttons);
 
-form.addEventListener('submit', function(event) {
-    event.preventDefault();
+const operators = ['+', '-', '*', '/', '%'];
 
-    const num1 = parseFloat(document.getElementById('num1').value);
-    const num2 = parseFloat(document.getElementById('num2').value);
-    const operator = document.getElementById('operator').value;
-
-    let result;
-
-    switch (operator) {
-        case 'add':
-            result = num1 + num2;
-            break;
-        case 'subtract':
-            result = num1 - num2;
-            break;
-        case 'multiply':
-            result = num1 * num2;
-            break;
-        case 'divide':
-            result = num1 / num2;
-            break;
-        default:
-            result = 'Invalid operator';
-    }
-
-    resultDiv.innerHTML = `<h2>Result: ${result}</h2>`;
+arr.forEach(button => {
+    button.addEventListener('click', (e) => {
+        let value = e.target.innerText.trim();
+        if (value === '=') {
+            str = eval(str);
+            displaybox.value = str;
+        } 
+        else if (value === 'AC') {
+            str = '';
+            displaybox.value = str;
+        } 
+        else if (value === 'DEL') {
+            str = str.slice(0, -1);
+            displaybox.value = str;
+        } 
+        else if (operators.includes(value)) {
+            // Prevent consecutive operators
+            if (str === '' || operators.includes(str.slice(-1))) {
+                return; // Do nothing
+            } 
+            else {
+                str += value;
+                displaybox.value = str;
+            }
+        } 
+        else {
+            str += value;
+            displaybox.value = str;
+        }
+    });
 });
